@@ -1,0 +1,31 @@
+# Dependencies
+/node_modules
+
+# Build output
+/.next
+/out
+/dist
+
+# Debug / Logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+debug.log
+
+# Env files (ne JAMAIS pousser tes secrets)
+/.env
+/.env.local
+/.env.development.local
+/.env.test.local
+/.env.production.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VSCode / IDE
+.vscode
+.idea
+
+# TypeScript
+*.tsbuildinfo
