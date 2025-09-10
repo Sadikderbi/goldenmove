@@ -6,6 +6,7 @@ import { ArrowLeft, CreditCard } from 'lucide-react';
 import Link from 'next/link';
 
 export default function CheckoutPage() {
+    
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [formData, setFormData] = useState({
         phone: '',

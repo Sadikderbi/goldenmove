@@ -16,8 +16,9 @@ export async function GET(
                 { status: 404 }
             );
         }
-
+        
         return NextResponse.json(result.rows[0]);
+        
     } catch (error) {
         return NextResponse.json(
             { error: "Internal server error" },

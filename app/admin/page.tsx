@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, Package, Save, Lock, ShoppingBag, Tag } from 'lucide-react';
+import { Plus, Package, Save, ShoppingBag, Tag } from 'lucide-react';
 
 interface Product {
     id?: number;
@@ -19,8 +19,9 @@ interface Product {
 }
 
 export default function AdminPage() {
-    const [isAuthenticated, setIsAuthenticated] = useState(true);
-    const [password, setPassword] = useState('');
+
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
     const [products, setProducts] = useState<Product[]>([]);
     const [orders, setOrders] = useState<any[]>([]);
     const [categories, setCategories] = useState<any[]>([]);
@@ -38,52 +39,33 @@ export default function AdminPage() {
         stock: 0
     });
 
-    const handleLogin = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (password === 'admin123') {
-            setIsAuthenticated(true);
-        } else {
-            alert('Mot de passe incorrect');
-        }
-    };
-
-    if (!isAuthenticated) {
-        return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-                    <div className="text-center mb-6">
-                        <Lock className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                        <h1 className="text-2xl font-bold text-gray-900">Admin Access</h1>
-                        <p className="text-gray-600">Entrez le mot de passe pour accéder</p>
-                    </div>
-                    <form onSubmit={handleLogin}>
-                        <input
-                            type="password"
-                            placeholder="Mot de passe"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full border border-gray-300 rounded-lg px-4 py-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                        <button
-                            type="submit"
-                            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors"
-                        >
-                            Se connecter
-                        </button>
-                    </form>
-                </div>
-            </div>
-        );
-    }
-
     useEffect(() => {
+        // Check if user is already authenticated via cookie
+        const checkAuth = async () => {
+            try {
+                const response = await fetch('/api/auth/verify');
+                if (response.ok) {
+                    setIsAuthenticated(true);
+                }
+            } catch (error) {
+                window.location.href = '/auth';
+            }
+        };
+
+        checkAuth();
+
         if (isAuthenticated) {
             fetchProducts();
             fetchOrders();
             fetchCategories();
         }
-    }, [isAuthenticated]);
+
+    }, []);
+
+    const handleLogout = async () => {
+        await fetch('/api/auth', { method: 'DELETE' });
+        window.location.href = '/auth'
+    };
 
     const fetchOrders = async () => {
         try {
@@ -179,6 +161,12 @@ export default function AdminPage() {
                         <h1 className="text-3xl font-bold text-gray-900">Admin Panel</h1>
                         <p className="text-gray-600">Gérer Golden Move</p>
                     </div>
+                    <button
+                        onClick={handleLogout}
+                        className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+                    >
+                        Déconnexion
+                    </button>
                     {activeTab === 'products' && (
                         <button
                             onClick={() => setShowForm(!showForm)}
@@ -431,7 +419,7 @@ export default function AdminPage() {
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 text-sm text-gray-900">${order.total}</td>
-                                            <td className="px-6 py-4 text-sm text-gray-900">{console.log(order.items.length)}{order.items.length} articles</td>
+                                            <td className="px-6 py-4 text-sm text-gray-900">{order.items.length} articles</td>
                                             <td className="px-6 py-4 text-sm text-gray-900">{new Date(order.created_at).toLocaleDateString()}</td>
                                         </tr>
                                     ))}

@@ -8,7 +8,7 @@ interface Product {
 	name: string;
 	price: number;
 	oldPrice?: number;
-	image: string;
+	images: string[];
 	isNew?: boolean;
 	category?: string;
 	description?: string;
@@ -23,6 +23,7 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
+	
 	const [isWishlisted, setIsWishlisted] = useState(false);
 	const [isAddingToCart, setIsAddingToCart] = useState(false);
 
@@ -38,7 +39,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 			id: product.id,
 			name: product.name,
 			price: product.price,
-			image: product.image,
+			image: product.images[0],
 			quantity: 1
 		});
 		
@@ -74,7 +75,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
 			<Link href={`/product/${product.id}`} className="relative block aspect-[4/3] overflow-hidden">
 				<img
-					src={product.image}
+					src={product.images[0]}
 					alt={product.name}
 					className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
 				/>

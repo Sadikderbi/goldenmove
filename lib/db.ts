@@ -1,4 +1,5 @@
 import { Pool } from 'pg';
+import bcrypt from 'bcryptjs';
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
@@ -9,6 +10,15 @@ export const query = (text: string, params?: any[]) => {
 };
 
 export const initDB = async () => {
+    // Create admin users table
+    await query(`
+        CREATE TABLE IF NOT EXISTS admin_users (
+            id SERIAL PRIMARY KEY,
+            email VARCHAR(255) UNIQUE NOT NULL,
+            password_hash VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    `);
     await query(`
         CREATE TABLE IF NOT EXISTS products (
             id SERIAL PRIMARY KEY,
@@ -63,4 +73,14 @@ export const initDB = async () => {
         ('Surf', 'Planches et accessoires de surf')
         ON CONFLICT (name) DO NOTHING
     `);
+    
+    // Create default admin user if none exists
+    const adminExists = await query('SELECT id FROM admin_users LIMIT 1');
+    if (adminExists.rows.length === 0) {
+        const hashedPassword = await bcrypt.hash('admin123', 10);
+        await query(
+            'INSERT INTO admin_users (email, password_hash) VALUES ($1, $2)',
+            ['admin@goldenmove.com', hashedPassword]
+        );
+    }
 };

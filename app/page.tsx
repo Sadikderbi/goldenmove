@@ -89,7 +89,11 @@ export default function Home() {
 
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
                         {categories.map((category) => (
-                            <Link href={`/category/${category.toLocaleLowerCase()}`} className="group">
+                            <Link 
+                                href={`/category/${category.toLocaleLowerCase()}`} 
+                                className="group"
+                                key={category}
+                            >
                                 <div className="bg-white rounded-xl p-6 text-center shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                                     <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white font-bold text-xl">
                                         {category[0]}

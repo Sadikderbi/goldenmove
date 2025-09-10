@@ -7,6 +7,7 @@ import { getCartCount } from '@/lib/cart';
 import CartDropdown from './CartDropdown';
 
 const Header = () => {
+
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [cartCount, setCartCount] = useState(0);
@@ -14,7 +15,7 @@ const Header = () => {
     useEffect(() => {
         const updateCartCount = () => {
             setCartCount(getCartCount());
-            if (isCartOpen) setIsCartOpen(true); // Close cart when updated
+            if (isCartOpen) setIsCartOpen(false); // Close cart when updated
         };
         updateCartCount();
 
@@ -27,7 +28,7 @@ const Header = () => {
             window.removeEventListener('storage', handleCartUpdate);
             window.removeEventListener('cartUpdated', handleCartUpdate);
         };
-    }, [isCartOpen]);
+    }, []);
 
     return (
         <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
@@ -44,15 +45,14 @@ const Header = () => {
                         <Link href="/" className="text-gray-700 hover:text-blue-600 transition-colors">Accueil</Link>
                         <Link href="/products" className="text-gray-700 hover:text-blue-600 transition-colors">Produits</Link>
                         <Link href="/categories" className="text-gray-700 hover:text-blue-600 transition-colors">Catégories</Link>
-                        <Link href="/admin" className="text-gray-700 hover:text-blue-600 transition-colors">Admin</Link>
                     </nav>
 
                     <div className="flex items-center space-x-4">
+
                         <button className="p-2 text-gray-600 hover:text-blue-600 transition-colors">
-                            <Search className="w-5 h-5" />
-                        </button>
-                        <button className="p-2 text-gray-600 hover:text-blue-600 transition-colors">
-                            <User className="w-5 h-5" />
+                            <Link href="/admin" >
+                                <User className="w-5 h-5" />
+                            </Link>
                         </button>
                         <div className="relative">
                             <button

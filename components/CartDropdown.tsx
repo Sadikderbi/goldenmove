@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getCart, CartItem } from '@/lib/cart';
+import { getCart, CartItem, updateCartItem } from '@/lib/cart';
 import { X, Minus, Plus } from 'lucide-react';
 import Link from 'next/link';
 
@@ -51,11 +51,8 @@ export default function CartDropdown({ isOpen, onClose }: CartDropdownProps) {
                                     <div className="flex items-center gap-1">
                                         <button 
                                             onClick={() => {
-                                                if (item.quantity === 1) {
-                                                    setCartItems(cartItems.filter(i => i !== item));
-                                                } else {
-                                                    item.quantity--;
-                                                }
+                                                updateCartItem(item.id, item.size, item.color, item.quantity - 1);
+                                                setCartItems(getCart());
                                             }}
                                             className="w-6 h-6 flex items-center justify-center border rounded"
                                         >
@@ -63,10 +60,13 @@ export default function CartDropdown({ isOpen, onClose }: CartDropdownProps) {
                                         </button>
                                         <span className="text-sm px-2">{item.quantity}</span>
                                         <button 
-                                            onClick={() => item.quantity++}
+                                            onClick={() => {
+                                                updateCartItem(item.id, item.size, item.color, item.quantity + 1);
+                                                setCartItems(getCart());
+                                            }}
                                             className="w-6 h-6 flex items-center justify-center border rounded"
                                         >
-                                            <Plus className="w-3 h-3"  />
+                                            <Plus className="w-3 h-3" />
                                         </button>
                                     </div>
                                 </div>

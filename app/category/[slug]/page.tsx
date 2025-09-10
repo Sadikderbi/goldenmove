@@ -22,10 +22,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
         
     }, []);
 
-    console.log(params.slug);
-
     const categoryProducts = products.filter(p => p.category?.toLowerCase() === params.slug);
-    console.log(categoryProducts);
     const details = categoryDetails[params.slug as keyof typeof categoryDetails];
 
     if (!details || categoryProducts.length === 0) {

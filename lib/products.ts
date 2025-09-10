@@ -3,7 +3,9 @@ export interface Product {
     name: string;
     price: number;
     oldPrice?: number;
-    image: string;
+    images: string[];
+    colors?: string[];
+    sizes?: number[];
     isNew?: boolean;
     category?: string;
     description?: string;
@@ -19,12 +21,16 @@ export const fetchProductById = async (id: string): Promise<Product> => {
 
         const response = await fetch(`/api/products/${id}`);
         const p = await response.json();
-        return {
+        
+
+        const prod : Product = {
             id: p.id,
             name: p.name,
             price: parseFloat(p.price),
             oldPrice: p.old_price ? parseFloat(p.old_price) : undefined,
-            image: p.image,
+            images: p.images,
+            colors: p.colors,
+            sizes: p.sizes,
             isNew: p.is_new,
             category: p.category,
             description: p.description,
@@ -33,6 +39,8 @@ export const fetchProductById = async (id: string): Promise<Product> => {
             stock: p.stock,
             fastDelivery: p.fast_delivery
         };
+
+        return prod;
         
     } catch (error) {
         throw new Error('Product not found');
@@ -49,7 +57,7 @@ export const fetchProducts = async (): Promise<Product[]> => {
             name: p.name,
             price: parseFloat(p.price),
             oldPrice: p.old_price ? parseFloat(p.old_price) : undefined,
-            image: p.image,
+            images: p.images || [p.image],
             isNew: p.is_new,
             category: p.category,
             description: p.description,
